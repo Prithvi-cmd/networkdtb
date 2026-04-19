@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admissions Portal</title>
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b; --line:#e2e8f0;
+      --primary:#0f172a; --soft:#eef2ff; --success:#166534; --successbg:#dcfce7; --danger:#b91c1c;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+    header{background:#fff;border-bottom:1px solid var(--line)}
+    .header-wrap{max-width:1200px;margin:0 auto;padding:24px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+    h1,h2,h3,p{margin:0}
+    .sub{color:var(--muted);margin-top:6px}
+    .badge{background:var(--soft);padding:8px 14px;border-radius:999px;font-size:14px}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+    .card h2{font-size:24px}
+    .card-head{padding:24px 24px 8px}
+    .card-body{padding:24px}
+    .desc{color:var(--muted);margin-top:8px;font-size:14px}
+    form.grid-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:block;font-size:14px;font-weight:700;margin-bottom:8px}
+    input,textarea,select{
+      width:100%;padding:12px 14px;border:1px solid #cbd5e1;border-radius:12px;font-size:14px;background:#fff
+    }
+    textarea{min-height:96px;resize:vertical}
+    .full{grid-column:1/-1}
+    button{
+      border:none;background:var(--primary);color:#fff;padding:12px 16px;border-radius:12px;
+      cursor:pointer;font-weight:700
+    }
+    button.secondary{background:#e2e8f0;color:#111827}
+    button.outline{background:#fff;color:#111827;border:1px solid #cbd5e1}
+    button.danger{background:#fff;color:var(--danger);border:1px solid #fecaca}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .msg{font-size:14px;color:var(--success);padding-top:4px}
+    .error{font-size:14px;color:var(--danger);padding-top:4px}
+    .note{font-size:12px;color:var(--muted);margin-top:8px}
+    .success-box{background:var(--successbg);color:var(--success);padding:14px;border-radius:12px;font-size:14px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{background:#f8fafc}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .detail{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff}
+    .detail p{margin:6px 0;font-size:14px}
+    .muted{color:var(--muted)}
+    .empty{padding:32px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      form.grid-form,.detail-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <div>
+        <h1>Admissions Portal</h1>
+        <p class="sub">Online application form with password-protected admin access</p>
+      </div>
+      <div class="badge"><span id="applicationCount">0</span> Applications</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <section class="card">
+        <div class="card-head">
+          <h2>Student Sign Up / Admission Form</h2>
+          <p class="desc">Applicants can enter their details here. Submitted entries are stored in the browser for this demo.</p>
+        </div>
+        <div class="card-body">
+          <form id="admissionForm" class="grid-form">
+            <div><label>Full Name *</label><input name="fullName" required></div>
+            <div><label>Date of Birth *</label><input type="date" name="dateOfBirth" required></div>
+            <div><label>Gender</label><input name="gender" placeholder="Male / Female / Other"></div>
+            <div><label>Email *</label><input type="email" name="email" required></div>
+            <div><label>Phone *</label><input name="phone" required></div>
+            <div><label>Course Applying For *</label><input name="course" required></div>
+            <div><label>Father's Name</label><input name="fatherName"></div>
+            <div><label>Mother's Name</label><input name="motherName"></div>
+            <div><label>Guardian Phone</label><input name="guardianPhone"></div>
+            <div><label>Previous School</label><input name="previousSchool"></div>
+            <div><label>Percentage / Grade</label><input name="percentage"></div>
+            <div><label>Postal Code</label><input name="postalCode"></div>
+            <div><label>City</label><input name="city"></div>
+            <div><label>State</label><input name="state"></div>
+            <div><label>Country</label><input name="country"></div>
+            <div class="full"><label>Address *</label><textarea name="address" required></textarea></div>
+            <div class="full"><label>Additional Notes</label><textarea name="notes"></textarea></div>
+            <div class="full">
+              <div class="actions">
+                <button type="submit">Submit Admission</button>
+                <div id="submitMessage" class="msg"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="card-head">
+          <h2 style="font-size:22px">Admin View</h2>
+          <p class="desc">Only admins can see submitted applications.</p>
+        </div>
+        <div class="card-body">
+          <div id="loginView">
+            <form id="adminLoginForm">
+              <label>Admin Password</label>
+              <input id="adminPassword" type="password" placeholder="Enter admin password">
+              <div class="actions" style="margin-top:14px">
+                <button type="submit">Login</button>
+              </div>
+              <div id="loginError" class="error"></div>
+              <p class="note">Demo password is set in the code. Change it before real use.</p>
+            </form>
+          </div>
+
+          <div id="adminControls" style="display:none">
+            <div class="success-box">Admin access granted.</div>
+            <div class="actions" style="margin-top:14px">
+              <button class="outline" id="exportBtn" type="button">Export CSV</button>
+              <button class="secondary" id="logoutBtn" type="button">Logout</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" id="adminSection" style="margin-top:24px;display:none">
+      <div class="card-head">
+        <h2>Submitted Admissions</h2>
+        <p class="desc">All submitted details stored in local browser storage for this demo.</p>
+      </div>
+      <div class="card-body">
+        <div id="entriesContainer"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "admissions_portal_entries_v1";
+    const ADMIN_PASSWORD = "AdminPassword@123"; // Demo only
+
+    const admissionForm = document.getElementById("admissionForm");
+    const submitMessage = document.getElementById("submitMessage");
+    const applicationCount = document.getElementById("applicationCount");
+    const adminLoginForm = document.getElementById("adminLoginForm");
+    const adminPasswordInput = document.getElementById("adminPassword");
+    const loginError = document.getElementById("loginError");
+    const loginView = document.getElementById("loginView");
+    const adminControls = document.getElementById("adminControls");
+    const adminSection = document.getElementById("adminSection");
+    const entriesContainer = document.getElementById("entriesContainer");
+    const exportBtn = document.getElementById("exportBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function getEntries() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
+    }
+
+    function saveEntries(entries) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      updateCount();
+    }
+
+    function updateCount() {
+      applicationCount.textContent = getEntries().length;
+    }
+
+    function renderEntries() {
+      const entries = getEntries();
+      if (!entries.length) {
+        entriesContainer.innerHTML = '<div class="empty">No admissions submitted yet.</div>';
+        return;
+      }
+
+      let html = '<div class="table-wrap"><table><thead><tr>' +
+        '<th>Name</th><th>Course</th><th>Email</th><th>Phone</th><th>Submitted</th><th>Status</th><th>Action</th>' +
+        '</tr></thead><tbody>';
+
+      for (const entry of entries) {
+        html += `<tr>
+          <td><strong>${escapeHtml(entry.fullName || "")}</strong><br><span class="muted">${escapeHtml([entry.city, entry.state].filter(Boolean).join(", "))}</span></td>
+          <td>${escapeHtml(entry.course || "")}</td>
+          <td>${escapeHtml(entry.email || "")}</td>
+          <td>${escapeHtml(entry.phone || "")}</td>
+          <td>${escapeHtml(entry.submittedAt || "")}</td>
+          <td>${escapeHtml(entry.status || "New")}</td>
+          <td><button class="danger" onclick="deleteEntry('${entry.id}')">Delete</button></td>
+        </tr>`;
+      }
+
+      html += '</tbody></table></div><div class="detail-grid">';
+
+      for (const entry of entries) {
+        html += `<div class="detail">
+          <h3>${escapeHtml(entry.fullName || "")}</h3>
+          <p class="muted">${escapeHtml(entry.course || "")} • ${escapeHtml(entry.submittedAt || "")}</p>
+          <p><strong>DOB:</strong> ${escapeHtml(entry.dateOfBirth || "-")}</p>
+          <p><strong>Gender:</strong> ${escapeHtml(entry.gender || "-")}</p>
+          <p><strong>Email:</strong> ${escapeHtml(entry.email || "-")}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(entry.phone || "-")}</p>
+          <p><strong>Address:</strong> ${escapeHtml(entry.address || "-")}</p>
+          <p><strong>Guardian:</strong> ${escapeHtml((entry.fatherName || "-") + " / " + (entry.motherName || "-"))}</p>
+          <p><strong>Guardian Phone:</strong> ${escapeHtml(entry.guardianPhone || "-")}</p>
+          <p><strong>Previous School:</strong> ${escapeHtml(entry.previousSchool || "-")}</p>
+          <p><strong>Score:</strong> ${escapeHtml(entry.percentage || "-")}</p>
+          <p><strong>Notes:</strong> ${escapeHtml(entry.notes || "-")}</p>
+        </div>`;
+      }
+      html += "</div>";
+      entriesContainer.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    admissionForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(admissionForm);
+      const data = Object.fromEntries(formData.entries());
+      const required = ["fullName","dateOfBirth","email","phone","course","address"];
+      const missing = required.filter(key => !String(data[key] || "").trim());
+
+      if (missing.length) {
+        submitMessage.textContent = "Please fill all required fields.";
+        submitMessage.className = "error";
+        return;
+      }
+
+      const entries = getEntries();
+      entries.unshift({
+        id: crypto.randomUUID(),
+        ...data,
+        submittedAt: new Date().toLocaleString(),
+        status: "New"
+      });
+      saveEntries(entries);
+      admissionForm.reset();
+      submitMessage.textContent = "Admission form submitted successfully.";
+      submitMessage.className = "msg";
+      setTimeout(() => submitMessage.textContent = "", 3000);
+      if (adminSection.style.display !== "none") renderEntries();
+    });
+
+    adminLoginForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (adminPasswordInput.value === ADMIN_PASSWORD) {
+        loginView.style.display = "none";
+        adminControls.style.display = "block";
+        adminSection.style.display = "block";
+        loginError.textContent = "";
+        adminPasswordInput.value = "";
+        renderEntries();
+      } else {
+        loginError.textContent = "Incorrect password.";
+      }
+    });
+
+    logoutBtn.addEventListener("click", function() {
+      adminControls.style.display = "none";
+      adminSection.style.display = "none";
+      loginView.style.display = "block";
+    });
+
+    exportBtn.addEventListener("click", function() {
+      const entries = getEntries();
+      if (!entries.length) return;
+      const headers = Object.keys(entries[0]);
+      const rows = entries.map(entry =>
+        headers.map(header => `"${String(entry[header] ?? "").replaceAll('"', '""')}"`).join(",")
+      );
+      const csv = [headers.join(","), ...rows].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "admissions.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    function deleteEntry(id) {
+      const entries = getEntries().filter(entry => entry.id !== id);
+      saveEntries(entries);
+      renderEntries();
+    }
+    window.deleteEntry = deleteEntry;
+
+    updateCount();
+  </script>
+</body>
+</html>
